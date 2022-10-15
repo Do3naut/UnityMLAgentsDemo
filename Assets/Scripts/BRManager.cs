@@ -44,6 +44,12 @@ public class BRManager : MonoBehaviour
         targ.EndEpisode();
     }
 
+    public void EndAllAgents()
+    {
+        enemy0.EndEpisode();
+        enemy1.EndEpisode();
+    }
+
     public void ResetStage()
     {
         enemy0.transform.position = enemy0Start;

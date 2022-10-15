@@ -20,7 +20,9 @@ public class BRAgent : Agent
 
     [SerializeField] LayerMask targetableLayers;
     [SerializeField] float gunCooldownInSeconds = 3f;
+    [SerializeField] int maxAmmo = 10;
     float cooldown = 0;
+    int ammo = 0;
 
     AudioSource audio;
     [SerializeField] AudioClip shootSound;
@@ -41,6 +43,7 @@ public class BRAgent : Agent
     public override void OnEpisodeBegin()
     {
         env.ResetStage();
+        ammo = maxAmmo;
     }
 
     /// The following 3 functions can be seen as running like the Update() loop, except they run as frequently as you collect observations: 
@@ -54,6 +57,7 @@ public class BRAgent : Agent
         sensor.AddObservation(transform.position.x);
         sensor.AddObservation(transform.position.z);
         sensor.AddObservation(Physics.Raycast(transform.position, transform.forward, 200f, targetableLayers));
+        sensor.AddObservation(ammo);
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -105,12 +109,18 @@ public class BRAgent : Agent
     void Shoot()
     {
         RaycastHit info;
-        if (cooldown > 0)
+        if (cooldown > 0 || ammo <= 0)
         {
+            if (ammo <= 0)
+            {
+                AddReward(-30f);
+                env.EndAllAgents();
+            }
             return;
         } else
         {
             cooldown = gunCooldownInSeconds;
+            ammo--;
         }
 
         if (Physics.Raycast(transform.position, transform.forward, out info, 200f, targetableLayers))
@@ -121,7 +131,7 @@ public class BRAgent : Agent
 
         } else
         {
-            // audio.PlayOneShot(shootSound);
+            audio.PlayOneShot(shootSound);
             AddReward(-5f);
         }
     }
