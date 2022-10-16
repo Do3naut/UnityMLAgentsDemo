@@ -52,7 +52,7 @@ public class BRManager : MonoBehaviour
 
     public void ResetStage()
     {
-        enemy0.transform.position = enemy0Start;
-        enemy1.transform.position = enemy1Start;
+        enemy0.transform.position = enemy0Start + new Vector3(Random.Range(-8f, 8f), 0, Random.Range(-8f, 8f));
+        enemy1.transform.position = enemy1Start + new Vector3(Random.Range(-8f, 8f), 0, Random.Range(-8f, 8f));
     }
 }
