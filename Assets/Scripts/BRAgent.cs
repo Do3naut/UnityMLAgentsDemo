@@ -126,9 +126,11 @@ public class BRAgent : Agent
         if (Physics.Raycast(transform.position, transform.forward, out info, 200f, targetableLayers))
         {
             Debug.Log(info.collider);
-            env.RegisterHit(this, info.collider.gameObject.GetComponent<BRAgent>());
-            audio.PlayOneShot(killSound);
-
+            if (info.collider.gameObject.CompareTag("enemy"))
+            {
+                env.RegisterHit(this, info.collider.gameObject);  // for targets
+                audio.PlayOneShot(killSound);
+            }
         } else
         {
             audio.PlayOneShot(shootSound);
