@@ -9,6 +9,7 @@ using Unity.MLAgents.Sensors;
 public class ObstacleAgent : Agent
 {
     Rigidbody rb;
+    [SerializeField] ObstacleManager om;
     [SerializeField] float speed = 5f;
     [SerializeField] float maxTurnSpeed = 5f;
 
@@ -36,8 +37,9 @@ public class ObstacleAgent : Agent
     // Runs every time the training environment is reset (when a new episode begins) 
     public override void OnEpisodeBegin()
     {
-        transform.localPosition = startingPos;
-        transform.localRotation = Quaternion.Euler(Vector3.zero);
+        om.setup();
+        //transform.localPosition = startingPos;
+        //transform.localRotation = Quaternion.Euler(Vector3.zero);
     }
 
     /// The following 3 functions can be seen as running like the Update() loop, except they run as frequently as you collect observations: 
@@ -67,7 +69,8 @@ public class ObstacleAgent : Agent
         float prevDistance = Vector3.Distance(lastPos, targetTransform.localPosition);
         float currDistance = Vector3.Distance(transform.localPosition, targetTransform.localPosition);
         AddReward((prevDistance-currDistance)/10f);
-        Debug.Log(GetCumulativeReward());
+        // Punish agent for doing nothing
+        AddReward(-0.2f / MaxStep);
         float moveX = actions.ContinuousActions[0];
         float moveZ = actions.ContinuousActions[1];
         float rotation = actions.ContinuousActions[2];
