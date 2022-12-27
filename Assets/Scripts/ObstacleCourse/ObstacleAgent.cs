@@ -19,18 +19,13 @@ public class ObstacleAgent : Agent
     [SerializeField] private MeshRenderer floorMeshRenderer;
     private RayPerceptionSensorComponent3D RaySensor;
 
-    private Vector3 startingPos;
-
-    private float startingDistance;
     private Vector3 lastPos;
 
     // Can be used as the Start() function
     public override void Initialize()
     {
         rb = GetComponent<Rigidbody>();
-        startingPos = new Vector3(9, 0.5f, -9);
         RaySensor = GetComponent<RayPerceptionSensorComponent3D>();
-        startingDistance = Vector3.Distance(transform.localPosition, targetTransform.localPosition);
         lastPos = transform.localPosition;
     }
 
@@ -38,8 +33,7 @@ public class ObstacleAgent : Agent
     public override void OnEpisodeBegin()
     {
         om.setup();
-        //transform.localPosition = startingPos;
-        //transform.localRotation = Quaternion.Euler(Vector3.zero);
+        lastPos = transform.localPosition;
     }
 
     /// The following 3 functions can be seen as running like the Update() loop, except they run as frequently as you collect observations: 
