@@ -34,6 +34,7 @@ public class ObstacleAgent : Agent
     {
         om.setup();
         lastPos = transform.localPosition;
+        floorMeshRenderer.material = loseMaterial;
     }
 
     /// The following 3 functions can be seen as running like the Update() loop, except they run as frequently as you collect observations: 
